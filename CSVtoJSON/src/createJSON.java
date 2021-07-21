@@ -18,29 +18,36 @@ public class createJSON {
     	
     	String country="";
     	String population="";
+    	String line="";
+    	 
     	String fileName = "/home/tushar/work/csvtojson/country.csv";
     	String jsonfile="/home/tushar/work/csvtojson/final.json";
     	 Scanner scanner = new Scanner(new File(fileName));
     	 File jfile=new File(jsonfile);  
+    	jfile.delete();
     	 jfile.createNewFile();  
 
          FileWriter fileWriter = new FileWriter(jfile,true); 
          fileWriter.write("{ \"countries\":[");
          //Set the delimiter used in file
-         scanner.useDelimiter(",");
+        while( scanner.hasNextLine())
+        {
+        line=scanner.nextLine();
+         Scanner linesc=new Scanner(line);
+         linesc.useDelimiter(",");
           
          //Get all tokens and store them in some data structure
          //I am just printing them
-         while (scanner.hasNext()) 
+         while (linesc.hasNext()) 
          {
-        	 country=scanner.next();
-        	 population=scanner.next();
+        	 country=linesc.next();
+        	 population=linesc.next();
         	
-             //System.out.println("Country | Population = "+country+"|"+population);
+             System.out.println("Country | Population = "+country+"|"+population);
             country=country.replaceAll("\\n", "");
             population=population.replaceAll("\\n", "");
-            System.out.println("country :"+country);
-            System.out.println("population: "+population); 
+            //System.out.println("country :"+country);
+            //System.out.println("population: "+population); 
             JSONObject countryObj = new JSONObject();  
              countryObj.put("Name", country);  
              countryObj.put("Population", population);  
@@ -50,7 +57,7 @@ public class createJSON {
              listOfStates.add("Rajasthan");  
 
              countryObj.put("States", listOfStates);  
-             System.out.println("json obj"+countryObj);
+            // System.out.println("json obj"+countryObj);
              
              
             // System.out.println("Writing JSON object to file");  
@@ -58,13 +65,16 @@ public class createJSON {
              //System.out.print(countryObj);  
             
              fileWriter.write(countryObj.toJSONString());  
-            
+            if(scanner.hasNext()) {
             fileWriter.write(",");
-
+            }
          }
+        }
+        
          fileWriter.write("]}");
          fileWriter.close();
-         //Do not forget to close the scanner  
+         //Do not forget to close the scanner 
+        
          scanner.close();  
 
     }  
